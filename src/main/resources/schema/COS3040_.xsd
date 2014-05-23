@@ -1,0 +1,568 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- +  BANCO CENTRAL DO BRASIL                                           + -->
+<!-- +  Sistema de Informacao de Credito - SCR Fase 2                     + -->
+<!-- +  Documento 3040 - definicao xml schema                             + -->
+<!-- +  Versao 1.3 - Producao           			                      + -->
+<!-- +  Laiaute para data-base:  Março/2014	                          + -->
+<!-- +  Atualizado em 25/02/2014                                          + -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- ******************************* -->
+<!-- Definicao dos elementos simples -->
+<!-- ******************************* -->
+
+<!-- tipos Doc3040 -->
+ <xs:element name='Doc3040' type='tipo3040'/>
+ <xs:element name='Cli' type='tipoCliente'/>
+ <xs:element name='Op' type='tipoOperacao'/>
+ <xs:element name='Agreg' type='tipoAgregacao'/>
+ <xs:element name='Venc' type='tipoVencimento'/>
+ <xs:element name="Gar" type="tipoGarantia"/>
+ <xs:element name="Inf" type="tipoInfoAdicional"/>
+
+<!-- ****************** -->
+<!-- Definicao de tipos -->
+<!-- ****************** -->
+
+<!-- Documento 3040 -->
+<xs:complexType name='tipo3040'>
+  <xs:sequence>
+    <xs:choice minOccurs='0' maxOccurs='unbounded'>
+      <xs:element ref='Cli' minOccurs='0' maxOccurs='unbounded'/>
+      <xs:element ref='Agreg' minOccurs='0' maxOccurs='unbounded'/>
+    </xs:choice>
+  </xs:sequence>
+  <xs:attribute name='DtBase' type='tipoDataMesAno' use='required'/>
+  <xs:attribute name='CNPJ' type='tipoCNPJ8' use='required'/>
+  <xs:attribute name='Parte' type='tipoParteRemessa' use='required'/>
+  <xs:attribute name='Remessa' type='tipoParteRemessa' use='required'/>
+  <xs:attribute name='TpArq' type='tipoArquivo' use='optional'/>  
+  <xs:attribute name='NomeResp' type='tipoNomeResp' use='required'/>
+  <xs:attribute name='EmailResp' type='tipoEmailResp' use='required'/>
+  <xs:attribute name='TelResp' type='tipoTelResp' use='required'/>
+  <xs:attribute name='TotalCli' type='tipoQuantidadeComZero' use='optional'/>
+</xs:complexType>
+
+<!-- Cliente -->
+<xs:complexType name='tipoCliente'>
+ <xs:sequence>
+   <xs:element ref='Op' minOccurs='0' maxOccurs='unbounded'/>
+ </xs:sequence>
+ <xs:attribute name='Cd' type='tipoCodCliente' use='required'/>
+ <xs:attribute name='Tp' type='tipoDoCliente' use='required'/>
+ <xs:attribute name='IniRelactCli' type='tipoData' use='required'/>
+ <xs:attribute name='Autorzc' type='tipoSimNao' use='required'/>
+ <xs:attribute name='FatAnual' type='tipoValor' use='optional'/>
+ <xs:attribute name='PorteCli' type='tipoPorteCliente' use='optional'/>
+ <xs:attribute name='TpCtrl' type='tipoControle' use='optional'/>
+ <xs:attribute name='CongEcon' type='tipoCodConglomerado' use='optional'/>
+ <xs:attribute name='ClassCli' type='tipoClassCliente' use='required'/>
+</xs:complexType>
+
+<!-- Operacao -->
+<xs:complexType name='tipoOperacao'>
+  <xs:sequence>
+   <xs:element ref='Venc' minOccurs='0' maxOccurs='1'/>
+   <xs:element ref="Gar" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element ref="Inf" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ <xs:attribute name='DetCli' type='tipoCNPJ14' use='optional'/>
+ <xs:attribute name='Contrt' type='tipoCodContrato' use='required'/>
+ <xs:attribute name='Mod' type='tipoModalidade' use='required'/>
+ <xs:attribute name='Cosif' type='tipoContaCosif' use='required'/>
+ <xs:attribute name='OrigemRec' type='tipoOrigemRec' use='required'/>
+ <xs:attribute name='Indx' type='tipoIndexador' use='required'/>
+ <xs:attribute name='PercIndx' type='tipoTaxa' use='optional'/>
+ <xs:attribute name='VarCamb' type='tipoVariacaoCambial' use='required'/>
+ <xs:attribute name='CEP' type='tipoCEP' use='required'/>
+ <xs:attribute name='TaxEft' type='tipoTaxa' use='required'/>
+ <xs:attribute name='DtContr' type='tipoData' use='required'/>
+ <xs:attribute name='VlrContr' type='tipoValorComZero' use='optional'/>
+ <xs:attribute name='NatuOp' type='tipoNaturezaIndiv' use='required'/>
+ <xs:attribute name='DtVencOp' type='tipoData' use='optional'/>
+ <xs:attribute name='ClassOp' type='tipoClassificacao' use='optional'/>
+ <xs:attribute name='ProvConsttd' type='tipoValorComZero' use='optional'/> 
+ <xs:attribute name='DiaAtraso' type='tipoQuantidadeComZero' use='optional'/> 
+ <xs:attribute name='CaracEspecial' type='tipoCaracEspecial' use='optional'/>
+</xs:complexType>
+
+<!-- Informacao adicional -->
+<xs:complexType name="tipoInfoAdicional">
+    <xs:attribute name="Tp" type="tipoDaInfoAdicional" use="required"/>
+    <xs:attribute name="Cd" type="tipoCodContrato" use="optional"/>
+    <xs:attribute name="Ident" type="tipoIdentInf" use="optional"/>
+    <xs:attribute name="Valor" type="tipoValorComZero" use="optional"/>
+    <xs:attribute name="Perc" type="tipoPorcentagemComZero" use="optional"/>
+    <xs:attribute name="Qtd" type="tipoQuantidade" use="optional"/>
+</xs:complexType>
+
+<!-- Garantia -->
+<xs:complexType name="tipoGarantia">
+    <xs:attribute name="Tp" type="tipoDeGarantia" use="required"/>
+    <xs:attribute name="Ident" type="tipoCodCliente" use="optional"/>
+    <xs:attribute name="PercGar" type="tipoPorcentagem" use="optional"/>
+    <xs:attribute name="VlrOrig" type="tipoValor" use="optional"/>
+    <xs:attribute name="VlrData" type="tipoValorComZero" use="optional"/>
+    <xs:attribute name="DtReav" type="tipoData" use="optional"/>
+</xs:complexType>
+
+<!-- Agregacao (antigo 3030) -->
+<xs:complexType name='tipoAgregacao'>
+ <xs:sequence>
+  <xs:element ref='Venc' minOccurs='1' maxOccurs='1'/>
+ </xs:sequence>
+ <xs:attribute name='NatuOp' type='tipoNaturezaAgreg'  use='required'/>
+ <xs:attribute name='Mod' type='tipoModalidade' use='required'/>
+ <xs:attribute name='OrigemRec' type='tipoOrigemRecAgreg' use='required'/>
+ <xs:attribute name='VincME' type='tipoSimNao' use='required'/>
+ <xs:attribute name='ClassOp' type='tipoClassificacao' use='required'/>
+ <xs:attribute name='FaixaVlr' type='tipoFaixaValor' use='required'/>
+ <xs:attribute name='PrzProvm' type='tipoSimNao' use='optional'/>
+ <xs:attribute name='Localiz' type='tipoLocalizacao' use='required'/>
+ <xs:attribute name='TpCli' type="tipoDoCliente" use='required'/>
+ <xs:attribute name='TpCtrl' type='tipoControle' use='optional'/>
+ <xs:attribute name='DesempOp' type='tipoDesempOp' use='required'/>
+ <xs:attribute name='CaracEspecial' type='tipoCaracEspecialAgreg' use='optional'/>
+ <xs:attribute name='ProvConsttd' type='tipoValorComZero' use='required'/>
+ <xs:attribute name='QtdOp' type='tipoQuantidade' use='required'/>
+ <xs:attribute name='QtdCli' type='tipoQuantidade' use='required'/>
+</xs:complexType>
+
+<!-- Distribuicao dos Vencimentos -->
+<xs:complexType name='tipoVencimento'>
+ <xs:attribute name='v20' type='tipoValor'/>
+ <xs:attribute name='v40' type='tipoValor'/>
+ <xs:attribute name='v60' type='tipoValor'/>
+ <xs:attribute name='v80' type='tipoValor'/>
+ <xs:attribute name='v110' type='tipoValor'/>
+ <xs:attribute name='v120' type='tipoValor'/>
+ <xs:attribute name='v130' type='tipoValor'/>
+ <xs:attribute name='v140' type='tipoValor'/>
+ <xs:attribute name='v150' type='tipoValor'/>
+ <xs:attribute name='v160' type='tipoValor'/>
+ <xs:attribute name='v165' type='tipoValor'/>
+ <xs:attribute name='v170' type='tipoValor'/>
+ <xs:attribute name='v175' type='tipoValor'/>
+ <xs:attribute name='v180' type='tipoValor'/>
+ <xs:attribute name='v190' type='tipoValor'/>
+ <xs:attribute name='v199' type='tipoValor'/>
+ <xs:attribute name='v205' type='tipoValor'/>
+ <xs:attribute name='v210' type='tipoValor'/>
+ <xs:attribute name='v220' type='tipoValor'/>
+ <xs:attribute name='v230' type='tipoValor'/>
+ <xs:attribute name='v240' type='tipoValor'/>
+ <xs:attribute name='v245' type='tipoValor'/>
+ <xs:attribute name='v250' type='tipoValor'/>
+ <xs:attribute name='v255' type='tipoValor'/>
+ <xs:attribute name='v260' type='tipoValor'/>
+ <xs:attribute name='v270' type='tipoValor'/>
+ <xs:attribute name='v280' type='tipoValor'/>
+ <xs:attribute name='v290' type='tipoValor'/>
+ <xs:attribute name='v310' type='tipoValor'/>
+ <xs:attribute name='v320' type='tipoValor'/>
+ <xs:attribute name='v330' type='tipoValor'/>
+</xs:complexType>
+
+<!-- Definicao de tipos para atributos especificos -->
+<xs:simpleType name='tipoNaturezaIndiv'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1-5]|1[1-6]|33'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoNaturezaAgreg'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1-5]|1[1-6]|3[2-3]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoModalidade'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?101|0?20[2-4|7-9]|0?21[0-6]|0?250|0?29[0|9]|0?30[1-3]|0?399|0?40[1-6]|0?450|0?49[0|9]|0?50[1-4]|0?59[0|9]|0?601|0?690|0?70[1-2]|0?79[0|9]|0?80[1-3]|0?890|0?90[1-3]|0?990|1001|1101|1190|120[1-3]|120[5-6]|1290|130[1-4]|1350|139[0|9]|1401|150[1-5]|151[1-2]|159[0|9]|180[1-2]|1899|1901|200[1-2]|1513'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoOrigemRec'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?10[1-2]|0?199|0?20[1-9]|0?21[0-2]|0?299'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<!-- IMPORTANTE: 
+
+O campo Origem de Recursos é mapeado com apenas dois dígitos da operação para o agregado. Por exemplo, uma operação
+com origem de recursos 0212 é transferida para o agregado de origem de recursos 0200.
+
+Portanto, deve-se incluir apenas valores com final xx00 no tipo abaixo (ie. '0100', '0200'). Isso deve ser feito apenas 
+quando uma nova categoria for incluída no tipoOrigemRec. Por exemplo, quando a origem de recurso 0301 for incluída no 
+tipo acima, deve-se incluir o valor 0300 abaixo.
+ 
+-->
+<xs:simpleType name='tipoOrigemRecAgreg'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?100|0?200'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoIndexador'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:enumeration value='11'/>
+    <xs:enumeration value='21'/>
+    <xs:enumeration value='22'/>
+    <xs:enumeration value='23'/>
+    <xs:enumeration value='29'/>
+    <xs:enumeration value='31'/>
+    <xs:enumeration value='32'/>
+    <xs:enumeration value='39'/>
+    <xs:enumeration value='41'/>
+    <xs:enumeration value='42'/>
+    <xs:enumeration value='43'/>
+    <xs:enumeration value='49'/>
+    <xs:enumeration value='99'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoVariacaoCambial'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:enumeration value='220'/>
+    <xs:enumeration value='425'/>
+    <xs:enumeration value='470'/>
+    <xs:enumeration value='540'/>
+    <xs:enumeration value='790'/>
+    <xs:enumeration value='978'/>
+    <xs:enumeration value='999'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoLocalizacao'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:enumeration value='10012'/>
+    <xs:enumeration value='10036'/>
+    <xs:enumeration value='10013'/>
+    <xs:enumeration value='10014'/>
+    <xs:enumeration value='10039'/>
+    <xs:enumeration value='10032'/>
+    <xs:enumeration value='10096'/>
+    <xs:enumeration value='10052'/>
+    <xs:enumeration value='10092'/>
+    <xs:enumeration value='10030'/>
+    <xs:enumeration value='10050'/>
+    <xs:enumeration value='10091'/>
+    <xs:enumeration value='10090'/>
+    <xs:enumeration value='10017'/>
+    <xs:enumeration value='10034'/>
+    <xs:enumeration value='10035'/>
+    <xs:enumeration value='10031'/>
+    <xs:enumeration value='10073'/>
+    <xs:enumeration value='10054'/>
+    <xs:enumeration value='10033'/>
+    <xs:enumeration value='10093'/>
+    <xs:enumeration value='10018'/>
+    <xs:enumeration value='10077'/>
+    <xs:enumeration value='10075'/>
+    <xs:enumeration value='10038'/>
+    <xs:enumeration value='10058'/>
+    <xs:enumeration value='10094'/>
+	<xs:enumeration value='10100'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCaracEspecial'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='()|((0?[1-7]|0?9|10|11|12|13|14|15|16|35)(;(0?[1-7]|0?9|10|11|12|13|14|15|16|35))*)'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCaracEspecialAgreg'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1-2]|11|15|35|99'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoControle'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1-4]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoDoCliente'>
+  <xs:restriction base='xs:integer'>
+  <xs:pattern value='[1-6]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoDeGarantia'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?10[1-8]|0?199|0?20[1-8]|0?299|0?32[1-5]|0?350|0?399|0?42[3-4]|0?499|0562|0?67[1-3]|0?799|0?88[1-8]|0?899|0?90[1-4]|100[1-2]|0?209|0?210|0?426|0?427|0?563|0?564|0?674|1101|1102|1201|1202|1203|1204|1301'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoFaixaValor'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[1-5]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoArquivo'>
+  <xs:restriction base='xs:string'>
+      <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='F'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoClassificacao'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:enumeration value='AA'/>
+    <xs:enumeration value='A'/>
+    <xs:enumeration value='B'/>
+    <xs:enumeration value='C'/>
+    <xs:enumeration value='D'/>
+    <xs:enumeration value='E'/>
+    <xs:enumeration value='F'/>
+    <xs:enumeration value='G'/>
+    <xs:enumeration value='H'/>
+    <xs:enumeration value='HH'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoPorteCliente'>
+  <xs:restriction base='xs:string'>
+      <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[1-8]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoDaInfoAdicional'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+	<xs:pattern value='0?10[1-5]|0?201|0?30[1-9]|0?310|0?399|0?40[1-6]|0?50[1-3]|0?599|0?70[1-7]|100[1-3]|110[1-2]|1201|1202|1203|0311|0312|1301|140[1-8]|150[1-3]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoMetodoValoracao'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1|2]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoDesempOp'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='0?[1-6]'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<!-- Definicao de campos de identificacao -->
+<xs:simpleType name='tipoCodCliente'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[0-9A-Za-z]+'/>
+    <xs:maxLength value='14'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCodContrato'>
+  <xs:restriction base='xs:string'>
+    <xs:pattern value='[^\r\n\|]+'/>
+    <xs:minLength value='1'/>
+    <xs:maxLength value='40'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCodConglomerado'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[^\r\n\|]+'/>
+    <xs:maxLength value='40'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoClassCliente'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:enumeration value='AA'/>
+    <xs:enumeration value='A'/>
+    <xs:enumeration value='B'/>
+    <xs:enumeration value='C'/>
+    <xs:enumeration value='D'/>
+    <xs:enumeration value='E'/>
+    <xs:enumeration value='F'/>
+    <xs:enumeration value='G'/>
+    <xs:enumeration value='H'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoContaCosif'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:minLength value='1'/>
+    <xs:maxLength value='255'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<!-- Definicao de tipos genericos -->
+<xs:simpleType name='tipoData'>
+  <xs:restriction base='xs:date'>
+    <xs:maxExclusive value='2150-01-01'/>
+    <xs:minExclusive value='1900-12-31'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoValor'>
+  <xs:restriction base='xs:decimal'>
+    <xs:totalDigits value='19'/>
+    <xs:fractionDigits value='2'/>
+    <xs:maxExclusive value='100000000000000000'/>
+    <xs:minExclusive value='0'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoValorComZero'>
+  <xs:restriction base='xs:decimal'>
+    <xs:totalDigits value='19'/>
+    <xs:fractionDigits value='2'/>
+    <xs:maxExclusive value='100000000000000000'/>
+    <xs:minInclusive value='0'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoPorcentagem'>
+  <xs:restriction base='xs:decimal'>
+    <xs:totalDigits value='5'/>
+    <xs:fractionDigits value='2'/>
+    <xs:maxExclusive value='1000'/>
+    <xs:minExclusive value='0'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoPorcentagemComZero'>
+  <xs:restriction base='xs:decimal'>
+    <xs:totalDigits value='5'/>
+    <xs:fractionDigits value='2'/>
+    <xs:maxExclusive value='1000'/>
+    <xs:minInclusive value='0'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoQuantidade'>
+  <xs:restriction base='xs:integer'>
+     <xs:minInclusive value='1'/>
+     <xs:maxExclusive value='1000000000'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoQuantidadeComZero'>
+  <xs:restriction base='xs:integer'>
+     <xs:minInclusive value='0'/>
+     <xs:maxExclusive value='1000000000'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCNPJ8'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[0-9]{8}'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCNPJ14'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[0-9]{14}'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoIdentInf'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[0-9A-Za-z-]+'/>
+    <xs:maxLength value='14'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoDataMesAno'>
+  <xs:restriction base='xs:gYearMonth'>
+    <xs:whiteSpace value='collapse'/>  
+    <xs:minInclusive value='2000-01'/>
+    <xs:maxExclusive value='2050-01'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoCEP'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value='[0-9]{8}'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoTaxa'>
+  <xs:restriction base='xs:decimal'>
+    <xs:totalDigits value='11'/>
+    <xs:fractionDigits value='7'/>
+    <xs:maxExclusive value='10000'/>
+    <xs:minExclusive value='-10000'/> 
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoSimNao'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+      <xs:pattern value='S|N'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoParteRemessa'>
+  <xs:restriction base='xs:integer'>
+    <xs:whiteSpace value='collapse'/>    
+    <xs:minInclusive value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<!-- Definicao de campos do cabecalho -->
+<xs:simpleType name='tipoNomeResp'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:maxLength value='200'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoEmailResp'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:pattern value="[A-Za-z0-9_]+([-+.'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+    <xs:maxLength value='100'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name='tipoTelResp'>
+  <xs:restriction base='xs:string'>
+    <xs:whiteSpace value='collapse'/>
+    <xs:maxLength value='14'/>
+    <xs:minLength value='1'/>
+  </xs:restriction>
+</xs:simpleType>
+
+</xs:schema>

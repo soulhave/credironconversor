@@ -1,0 +1,170 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	attributeFormDefault="unqualified" elementFormDefault="qualified">
+	<xs:element name="Doc3040">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Cli" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Op" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:choice maxOccurs="unbounded" minOccurs="0">
+										<xs:element name="Venc">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute type="xs:float" name="v20" use="optional" />
+														<xs:attribute type="xs:float" name="v110"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v120"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v130"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v140"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v150"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v160"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v165"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v170"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v205"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v220"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v310"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v320"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v330"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v230"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v210"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v240"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v245"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v250"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v255"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v260"
+															use="optional" />
+														<xs:attribute type="xs:float" name="v270"
+															use="optional" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Gar">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute type="xs:short" name="Tp" use="optional" />
+														<xs:attribute type="xs:long" name="Ident"
+															use="optional" />
+														<xs:attribute type="xs:float" name="PercGar"
+															use="optional" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Inf">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute type="xs:short" name="Tp" use="optional" />
+														<xs:attribute type="xs:string" name="Cd"
+															use="optional" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+									<xs:attribute type="xs:string" name="Contrt" use="optional" />
+									<xs:attribute type="xs:short" name="Mod" use="optional" />
+									<xs:attribute type="xs:string" name="Cosif" use="optional" />
+									<xs:attribute type="xs:short" name="OrigemRec"
+										use="optional" />
+									<xs:attribute type="xs:byte" name="Indx" use="optional" />
+									<xs:attribute type="xs:byte" name="PercIndx" use="optional" />
+									<xs:attribute type="xs:short" name="VarCamb" use="optional" />
+									<xs:attribute type="xs:int" name="CEP" use="optional" />
+									<xs:attribute type="xs:float" name="TaxEft" use="optional" />
+									<xs:attribute type="xs:date" name="DtContr" use="optional" />
+									<xs:attribute type="xs:byte" name="NatuOp" use="optional" />
+									<xs:attribute type="xs:date" name="DtVencOp" use="optional" />
+									<xs:attribute type="xs:string" name="ClassOp" use="optional" />
+									<xs:attribute type="xs:float" name="ProvConsttd"
+										use="optional" />
+									<xs:attribute type="xs:float" name="VlrContr" use="optional" />
+									<xs:attribute type="xs:long" name="DetCli" use="optional" />
+									<xs:attribute type="xs:short" name="DiaAtraso"
+										use="optional" />
+									<xs:attribute type="xs:byte" name="CaracEspecial"
+										use="optional" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute type="xs:long" name="Cd" use="optional" />
+						<xs:attribute type="xs:byte" name="Tp" use="optional" />
+						<xs:attribute type="xs:string" name="Autorzc" use="optional" />
+						<xs:attribute type="xs:float" name="FatAnual" use="optional" />
+						<xs:attribute type="xs:byte" name="PorteCli" use="optional" />
+						<xs:attribute type="xs:date" name="IniRelactCli" use="optional" />
+						<xs:attribute type="xs:string" name="ClassCli" use="optional" />
+						<xs:attribute type="xs:byte" name="TpCtrl" use="optional" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Agreg" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Venc">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:float" name="v205" use="optional" />
+											<xs:attribute type="xs:float" name="v110" use="optional" />
+											<xs:attribute type="xs:float" name="v120" use="optional" />
+											<xs:attribute type="xs:float" name="v130" use="optional" />
+											<xs:attribute type="xs:float" name="v140" use="optional" />
+											<xs:attribute type="xs:float" name="v20" use="optional" />
+											<xs:attribute type="xs:float" name="v245" use="optional" />
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute type="xs:byte" name="NatuOp" use="optional" />
+						<xs:attribute type="xs:short" name="Mod" use="optional" />
+						<xs:attribute type="xs:byte" name="OrigemRec" use="optional" />
+						<xs:attribute type="xs:string" name="VincME" use="optional" />
+						<xs:attribute type="xs:string" name="ClassOp" use="optional" />
+						<xs:attribute type="xs:byte" name="FaixaVlr" use="optional" />
+						<xs:attribute type="xs:string" name="PrzProvm" use="optional" />
+						<xs:attribute type="xs:short" name="Localiz" use="optional" />
+						<xs:attribute type="xs:byte" name="TpCli" use="optional" />
+						<xs:attribute type="xs:byte" name="TpCtrl" use="optional" />
+						<xs:attribute type="xs:byte" name="DesempOp" use="optional" />
+						<xs:attribute type="xs:float" name="ProvConsttd" use="optional" />
+						<xs:attribute type="xs:byte" name="QtdOp" use="optional" />
+						<xs:attribute type="xs:byte" name="QtdCli" use="optional" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute type="xs:string" name="DtBase" />
+			<xs:attribute type="xs:int" name="CNPJ" />
+			<xs:attribute type="xs:byte" name="Remessa" />
+			<xs:attribute type="xs:byte" name="Parte" />
+			<xs:attribute type="xs:string" name="TpArq" />
+			<xs:attribute type="xs:string" name="NomeResp" />
+			<xs:attribute type="xs:string" name="EmailResp" />
+			<xs:attribute type="xs:long" name="TelResp" />
+			<xs:attribute type="xs:short" name="TotalCli" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
