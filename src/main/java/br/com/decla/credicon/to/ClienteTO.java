@@ -1,19 +1,56 @@
 package br.com.decla.credicon.to;
 
+import java.util.Date;
+
+import org.coury.jfilehelpers.annotations.FieldAlign;
+import org.coury.jfilehelpers.annotations.FieldConverter;
+import org.coury.jfilehelpers.annotations.FieldFixedLength;
+import org.coury.jfilehelpers.annotations.FieldTrim;
+import org.coury.jfilehelpers.annotations.FixedLengthRecord;
+import org.coury.jfilehelpers.enums.AlignMode;
+import org.coury.jfilehelpers.enums.ConverterKind;
+import org.coury.jfilehelpers.enums.TrimMode;
+
+@FixedLengthRecord()
 public class ClienteTO {
 	
-	private String sequencial; //Tipo N - Tamanho 6 - Decimais  # Posição 1-6 #
-	private String iDRegistro; //Tipo N - Tamanho 1 - Decimais  # Posição 7-7 #Identificação Registro
-	private String filler; //Tipo A - Tamanho 2 - Decimais  # Posição 8-9 #Espaços em branco
-	private String cpfCnpjCliente; //Tipo A - Tamanho 14 - Decimais  # Posição 10-23 #Identificação do cliente (CPF, CNPJ)
-	private String porteCliente; //Tipo A - Tamanho 1 - Decimais  # Posição 24-24 #Porte do Cliente
-	private String filler_2; //Tipo A - Tamanho 2 - Decimais  # Posição 25-26 #Espaços em branco
-	private String tipoControle; //Tipo A - Tamanho 2 - Decimais  # Posição 27-28 #identificador do tipo de controlador
-	private String tpoPessoa; //Tipo N - Tamanho 1 - Decimais  # Posição 29-29 #Tipo de Pessoa
-	private String dataIncioRelacionamento; //Tipo D - Tamanho 8 - Decimais  # Posição 30-37 #Data de abertura de conta corrente ou outra data considerada relevante para avaliação do risco do crédito
-	private String nivelRiscoCliente; //Tipo A - Tamanho 2 - Decimais  # Posição 38-39 #Classificação de Risco do Cliente
-	private String autorização; //Tipo A - Tamanho 1 - Decimais  # Posição 40-40 #Autorização para a consulta das informações do cliente no SCR
-	private String faturamentoAnual; //Tipo N - Tamanho 16 - Decimais 2 # Posição 41-56 #Faturamento anual PJ
+	@FieldFixedLength(6)
+	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
+	private String sequencial; //Tipo N - Tamanho 6 - Decimais  # Posicao 1-6 #
+	@FieldFixedLength(1)
+	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
+	private String iDRegistro; //Tipo N - Tamanho 1 - Decimais  # Posicao 7-7 #Identificacao Registro
+	@FieldFixedLength(2)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String filler; //Tipo A - Tamanho 2 - Decimais  # Posicao 8-9 #Espaços em branco
+	@FieldFixedLength(14)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String cpfCnpjCliente; //Tipo A - Tamanho 14 - Decimais  # Posicao 10-23 #Identificacao do cliente (CPF, CNPJ)
+	@FieldFixedLength(1)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String porteCliente; //Tipo A - Tamanho 1 - Decimais  # Posicao 24-24 #Porte do Cliente
+	@FieldFixedLength(2)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String filler_2; //Tipo A - Tamanho 2 - Decimais  # Posicao 25-26 #Espaços em branco
+	@FieldFixedLength(2)
+	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
+	private String tipoControle; //Tipo A - Tamanho 2 - Decimais  # Posicao 27-28 #identificador do tipo de controlador
+	@FieldFixedLength(1)
+	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
+	private String tipoPessoa; //Tipo N - Tamanho 1 - Decimais  # Posicao 29-29 #Tipo de Pessoa
+	@FieldTrim(trimMode=TrimMode.Right)
+    @FieldFixedLength(8)
+    @FieldConverter(converter = ConverterKind.Date, format = "yyyyMMdd")
+	private Date dataIncioRelacionamento; //Tipo D - Tamanho 8 - Decimais  # Posicao 30-37 #Data de abertura de conta corrente ou outra data considerada relevante para avaliacao do risco do crédito
+	@FieldFixedLength(2)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String nivelRiscoCliente; //Tipo A - Tamanho 2 - Decimais  # Posicao 38-39 #Classificacao de Risco do Cliente
+	@FieldFixedLength(1)
+	@FieldAlign(alignMode=AlignMode.Left)
+	private String autorizacao; //Tipo A - Tamanho 1 - Decimais  # Posicao 40-40 #Autorizacao para a consulta das informações do cliente no SCR
+	@FieldFixedLength(16)
+	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
+	private String faturamentoAnual; //Tipo N - Tamanho 16 - Decimais 2 # Posicao 41-56 #Faturamento anual PJ
 	
 	public String getSequencial() {
 		return sequencial;
@@ -58,15 +95,15 @@ public class ClienteTO {
 		this.tipoControle = tipoControle;
 	}
 	public String getTpoPessoa() {
-		return tpoPessoa;
+		return tipoPessoa;
 	}
-	public void setTpoPessoa(String tpoPessoa) {
-		this.tpoPessoa = tpoPessoa;
+	public void setTipoPessoa(String tipoPessoa) {
+		this.tipoPessoa = tipoPessoa;
 	}
-	public String getDataIncioRelacionamento() {
+	public Date getDataIncioRelacionamento() {
 		return dataIncioRelacionamento;
 	}
-	public void setDataIncioRelacionamento(String dataIncioRelacionamento) {
+	public void setDataIncioRelacionamento(Date dataIncioRelacionamento) {
 		this.dataIncioRelacionamento = dataIncioRelacionamento;
 	}
 	public String getNivelRiscoCliente() {
@@ -75,11 +112,11 @@ public class ClienteTO {
 	public void setNivelRiscoCliente(String nivelRiscoCliente) {
 		this.nivelRiscoCliente = nivelRiscoCliente;
 	}
-	public String getAutorização() {
-		return autorização;
+	public String getAutorizacao() {
+		return autorizacao;
 	}
-	public void setAutorização(String autorização) {
-		this.autorização = autorização;
+	public void setAutorizacao(String autorizacao) {
+		this.autorizacao = autorizacao;
 	}
 	public String getFaturamentoAnual() {
 		return faturamentoAnual;
