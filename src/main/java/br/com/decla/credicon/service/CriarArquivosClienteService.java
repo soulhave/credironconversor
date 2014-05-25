@@ -14,12 +14,10 @@ import br.com.decla.credicon.to.ClienteTO;
  *
  */
 public class CriarArquivosClienteService extends CriarArquivosService {
-	
+
+	private static final String CLIENTE_HEADER_FILE = "CLIENTE";
 	private static final String CLIENTE_OUTPUT = "Cliente-%1.txt";
-	private static final String OUT = "src/main/resources/out/";
 	private static CriarArquivosClienteService S_INSTANCE;
-	private static final String HEADER = "0000010CLIENTE  9999YYYYMM                             0";
-	private static final String TRAILLER = "%14                                                0";
 	
 	/**
 	 * 
@@ -41,10 +39,10 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 	 */
 	public void criarArquivoCliente(Doc3040 doc3040) {
 		Integer i = 1;
-		String outputFile = OUT+CLIENTE_OUTPUT.replace("%1", getDateStr());
+		String outputFile = CLIENTE_OUTPUT.replace("%1", getDateStr());
 
 		//Criar arquivo Reader
-		String header = headerOfFile(outputFile,doc3040.getDtBase());
+		String header = headerOfFile(doc3040.getDtBase(),CLIENTE_HEADER_FILE,29);
 		
 		/*Lista de Clientes*/
 		List<ClienteTO> lista = new ArrayList<ClienteTO>();
@@ -69,26 +67,9 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 		}
 		
 		//Criar arquivo trailler
-		String trailler = traillerOfFile(outputFile,String.format("%06d", ++i));
+		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++i),48);
 		
 		//Gerar arquivo
 		criarArquivoTxt(outputFile, lista, ClienteTO.class, header, trailler);
-	}
-
-	/**
-	 * 
-	 * @param outputFile
-	 */
-	private String traillerOfFile(String outputFile, String length) {
-		return TRAILLER.replaceAll("%1", length);
-	}
-
-	/**
-	 * Alterar os dados do cabecalho
-	 * @param outputFile
-	 * @param dt 
-	 */
-	private String headerOfFile(String outputFile, String dt) {
-		return HEADER.replaceAll("YYYYMM", dt.replace("-", ""));
 	}
 }

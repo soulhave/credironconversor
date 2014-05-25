@@ -1,3 +1,4 @@
+//marshaller.marshal(doc3040, System.out);
 package br.com.decla.credicon.controller;
 
 import java.io.File;
@@ -9,6 +10,7 @@ import javax.xml.bind.Unmarshaller;
 
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.service.CriarArquivosClienteService;
+import br.com.decla.credicon.service.CriarArquivosOperacaoService;
 
 public class Principal {
 
@@ -23,9 +25,15 @@ public class Principal {
 			Doc3040 doc3040 = (Doc3040) unmarshaller.unmarshal(xml);
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			//marshaller.marshal(doc3040, System.out);
-			CriarArquivosClienteService instance = CriarArquivosClienteService.getInstance();
-			instance.criarArquivoCliente(doc3040);
+			
+			//Criação do arquivo de Clientes
+			CriarArquivosClienteService cliente = CriarArquivosClienteService.getInstance();
+			cliente.criarArquivoCliente(doc3040);
+			
+			//Criação do arquivo de operacoes.
+			CriarArquivosOperacaoService operacao = CriarArquivosOperacaoService.getInstance();
+			operacao.criarArquivoOperacao(doc3040);
+			
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
