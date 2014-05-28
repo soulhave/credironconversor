@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.coury.jfilehelpers.engines.FileHelperEngine;
 
@@ -33,7 +34,6 @@ public abstract class CriarArquivosService {
 	protected static final String _4 = "4";
 	protected static final String FILLER = "";
 	protected static final String PATTERN_DATE = "yyyy-MM-dd-HHmmss";
-	protected static final String OUT = "src/main/resources/out/";
 	protected static final String HEADER = "0000010%19999YYYYMM%20";
 	protected static final String TRAILLER = "%14%20";
 
@@ -50,7 +50,7 @@ public abstract class CriarArquivosService {
 		try {
 			FileHelperEngine<Class> fileHelperEngine = new FileHelperEngine<Class>(clazz);
 			fileHelperEngine.setHeaderText(header);
-			fileHelperEngine.writeFile(OUT+outputFile, list);
+			fileHelperEngine.writeFile(Constants.OUT+outputFile, list);
 			
 			if(trailler!=null && !trailler.isEmpty())
 				writeFooter(outputFile, trailler);
@@ -67,7 +67,7 @@ public abstract class CriarArquivosService {
 	 */
 	protected void writeFooter(String file, String footer){
 		try {
-		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(OUT+file, true)));
+		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(Constants.OUT+file, true)));
 		    out.println(footer);
 		    out.close();
 		} catch (IOException e) {
@@ -148,10 +148,10 @@ public abstract class CriarArquivosService {
 		File[] files = new File[pathFiles.length];
 		
 		for (String s : pathFiles) {
-			files[i++] = new File(OUT+s);
+			files[i++] = new File(Constants.OUT+s);
 		}
 		
-		File fileOutPut = new File(OUT+fileOutput);
+		File fileOutPut = new File(Constants.OUT+fileOutput);
 		
 		mergeFiles(files, fileOutPut);
 	}
@@ -198,5 +198,18 @@ public abstract class CriarArquivosService {
 			e.printStackTrace();
 		}
  
+	}
+	
+	/**
+	 * Obtem o cliente pela chave
+	 * @param key
+	 * @return 
+	 */
+	protected String obterClienteByKey(String key, Map<String, String> clientes) {
+		String string = null;
+		if(clientes!=null && !clientes.isEmpty()) {
+			string = clientes.get(key);
+		}
+		return (string==null?key:string);
 	}
 }

@@ -2,6 +2,7 @@ package br.com.decla.credicon.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.generated.Doc3040.Cli;
@@ -36,8 +37,9 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 	/**
 	 * Criar arquivo de Clientes
 	 * @param doc3040
+	 * @param arquivoCliente 
 	 */
-	public void criarArquivoCliente(Doc3040 doc3040) {
+	public void criarArquivoCliente(Doc3040 doc3040, Map<String, String> arquivoCliente) {
 		Integer i = 1;
 		String outputFile = CLIENTE_OUTPUT.replace("%1", getDateStr());
 
@@ -53,7 +55,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 			
 			cliente.setSequencial((++i).toString());
 			cliente.setiDRegistro(_1);
-			cliente.setCpfCnpjCliente(cli.getCd().toString());
+			cliente.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 			cliente.setPorteCliente(cli.getPorteCli().toString());
 			cliente.setFiller(FILLER);
 			cliente.setTipoControle((cli.getTpCtrl()!=null?cli.getTpCtrl().toString():"01"));
@@ -72,4 +74,5 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 		//Gerar arquivo
 		criarArquivoTxt(outputFile, lista, ClienteTO.class, header, trailler);
 	}
+	
 }

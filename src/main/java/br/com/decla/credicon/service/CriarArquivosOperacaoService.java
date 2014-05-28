@@ -3,6 +3,7 @@ package br.com.decla.credicon.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.generated.Doc3040.Cli;
@@ -47,8 +48,9 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 	/**
 	 * Criar arquivo de Clientes
 	 * @param doc3040
+	 * @param arquivoCliente 
 	 */
-	public void criarArquivoOperacao(Doc3040 doc3040) {
+	public void criarArquivoOperacao(Doc3040 doc3040, Map<String, String> arquivoCliente) {
 		Integer i = 1;
 		String fileOutput = OPERACAO_OUTPUT.replace("%1", getDateStr());
 
@@ -64,7 +66,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 				OperacaoTO operacao = new OperacaoTO();
 				operacao.setSequencial((++i).toString());
 				operacao.setiDRegistro(_1);
-				operacao.setCpfCnpjCliente(cli.getCd().toString());
+				operacao.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 				operacao.setOrigemImportacao(_4);
 				operacao.setNumeroContrato(op.getContrt());
 				operacao.setTaxaReferencial(doubleToStrWithoutDot(op.getIndx().doubleValue()));
@@ -136,10 +138,10 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 		criarArquivoTxt(OPERACAO_OUTPUT_OPERACAO_TMP, lista, OperacaoTO.class, header, null);
 
 		//Gera  o arquivo de garantia
-		i = criarArquivoGarantia(doc3040, i);
+		i = criarArquivoGarantia(doc3040, i, arquivoCliente);
 
 		//Gera  o arquivo de garantia
-		i = criarArquivoInfAdicional(doc3040, i);
+		i = criarArquivoInfAdicional(doc3040, i, arquivoCliente);
 		
 		mergeFiles(new String[]{
 				OPERACAO_OUTPUT_OPERACAO_TMP,
@@ -157,8 +159,9 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 	 * Metodo gera a Criação da Garantia
 	 * 
 	 * @param doc3040
+	 * @param arquivoCliente 
 	 */
-	private Integer criarArquivoGarantia(Doc3040 doc3040,Integer y) {
+	private Integer criarArquivoGarantia(Doc3040 doc3040,Integer y, Map<String, String> arquivoCliente) {
 		/* Lista de Operacoes */
 		List<GarantiaTO> lista = new ArrayList<GarantiaTO>();
 		List<Cli> clientes = doc3040.getCli();
@@ -180,7 +183,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 						garantia.setValorOriGarantia(_0);
 						garantia.setValorAtualGarantia(_0);
 						garantia.setDataReavaliacao(new Date(0));
-						garantia.setCpfCnpjCliente(cli.getCd().toString());
+						garantia.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 						garantia.setNumeroContrato(op.getContrt());
 						garantia.setFiller(FILLER);
 						garantia.setFiller_end(_0);
@@ -201,8 +204,9 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 	 * Metodo gera a Criação das Informações adicionais
 	 * 
 	 * @param doc3040
+	 * @param arquivoCliente 
 	 */
-	private Integer criarArquivoInfAdicional(Doc3040 doc3040,Integer y) {
+	private Integer criarArquivoInfAdicional(Doc3040 doc3040,Integer y, Map<String, String> arquivoCliente) {
 		/* Lista de Operacoes */
 		List<InformacaoAdicionalTO> lista = new ArrayList<InformacaoAdicionalTO>();
 		List<Cli> clientes = doc3040.getCli();
@@ -223,7 +227,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 						infAd.setValor(_0); //Não tem no xml
 						infAd.setPercentual(_0); //Não tem no xml
 						infAd.setQtdRegistros(_0); //Não tem no xml está vazio
-						infAd.setCpfCnpjCliente(cli.getCd().toString());
+						infAd.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 						infAd.setNumeroContrato(op.getContrt());
 						infAd.setFiller(FILLER);
 						infAd.setFiller_end(_0);

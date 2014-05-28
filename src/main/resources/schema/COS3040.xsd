@@ -110,7 +110,7 @@
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
-						<xs:attribute type="xs:long" name="Cd" use="optional" />
+						<xs:attribute type="xs:string" name="Cd" use="optional" />
 						<xs:attribute type="xs:byte" name="Tp" use="optional" />
 						<xs:attribute type="xs:string" name="Autorzc" use="optional" />
 						<xs:attribute type="xs:float" name="FatAnual" use="optional" />

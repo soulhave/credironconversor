@@ -2,6 +2,7 @@
 package br.com.decla.credicon.controller;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.service.CriarArquivosClienteService;
 import br.com.decla.credicon.service.CriarArquivosOperacaoService;
+import br.com.decla.credicon.service.LerArquivoCpfCnpjCliente;
 
 public class Principal {
 
@@ -26,13 +28,16 @@ public class Principal {
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			
+			//Le o arquivo de Clientes
+			Map<String, String> arquivoCliente = LerArquivoCpfCnpjCliente.getInstance().lerArquivoClienteTxt();
+			
 			//Criação do arquivo de Clientes
 			CriarArquivosClienteService cliente = CriarArquivosClienteService.getInstance();
-			cliente.criarArquivoCliente(doc3040);
+			cliente.criarArquivoCliente(doc3040,arquivoCliente);
 			
 			//Criação do arquivo de operacoes.
 			CriarArquivosOperacaoService operacao = CriarArquivosOperacaoService.getInstance();
-			operacao.criarArquivoOperacao(doc3040);
+			operacao.criarArquivoOperacao(doc3040,arquivoCliente);
 			
 		} catch (JAXBException e) {
 			e.printStackTrace();
