@@ -14,6 +14,7 @@ import br.com.decla.credicon.generated.Doc3040.Cli.Op.Venc;
 import br.com.decla.credicon.to.GarantiaTO;
 import br.com.decla.credicon.to.InformacaoAdicionalTO;
 import br.com.decla.credicon.to.OperacaoTO;
+import br.com.decla.credicon.util.Utiliarios;
 
 /**
  * Classe responsável por gerar o arquivo de 
@@ -25,7 +26,6 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 	
 	protected static final String REGIAO_BACEN = "10093";
 	private static final String OPERACAO_HEADER_FILE = "OPERACOES";
-	private static final String OPERACAO_OUTPUT = "Operacao-%1.txt";
 	private static final String OPERACAO_OUTPUT_GARANTIA_TMP = "Garantia_tmp.txt";
 	private static final String OPERACAO_OUTPUT_OPERACAO_TMP = "Operacao_tmp.txt";
 	private static final String OPERACAO_OUTPUT_INF_AD_TMP = "Agregacao_tmp.txt";
@@ -51,8 +51,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 	 * @param arquivoCliente 
 	 */
 	public void criarArquivoOperacao(Doc3040 doc3040, Map<String, String> arquivoCliente) {
-		Integer i = 1;
-		String fileOutput = OPERACAO_OUTPUT.replace("%1", getDateStr());
+		String fileOutput = Constants.OPERACAO_OUTPUT;
 
 		//Criar arquivo Reader
 		String header = headerOfFile(doc3040.getDtBase(),OPERACAO_HEADER_FILE,633);
@@ -64,7 +63,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 		for (Cli cli : clientes) {
 			for (Op op : cli.getOp()) {
 				OperacaoTO operacao = new OperacaoTO();
-				operacao.setSequencial((++i).toString());
+				operacao.setSequencial((++Constants.i).toString());
 				operacao.setiDRegistro(_1);
 				operacao.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 				operacao.setOrigemImportacao(_4);
@@ -138,19 +137,19 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 		criarArquivoTxt(OPERACAO_OUTPUT_OPERACAO_TMP, lista, OperacaoTO.class, header, null);
 
 		//Gera  o arquivo de garantia
-		i = criarArquivoGarantia(doc3040, i, arquivoCliente);
+		Constants.i = criarArquivoGarantia(doc3040, Constants.i, arquivoCliente);
 
 		//Gera  o arquivo de garantia
-		i = criarArquivoInfAdicional(doc3040, i, arquivoCliente);
+		Constants.i = criarArquivoInfAdicional(doc3040, Constants.i, arquivoCliente);
 		
-		mergeFiles(new String[]{
+		Utiliarios.mergeFiles(new String[]{
 				OPERACAO_OUTPUT_OPERACAO_TMP,
 				OPERACAO_OUTPUT_GARANTIA_TMP,
 				OPERACAO_OUTPUT_INF_AD_TMP}, 
 				fileOutput);
 		
 		//Criar arquivo trailler
-		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++i),652);
+		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),652);
 		
 		writeFooter(fileOutput, trailler);
 	}

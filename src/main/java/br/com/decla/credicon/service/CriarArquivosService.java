@@ -1,16 +1,10 @@
 package br.com.decla.credicon.service;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +27,7 @@ public abstract class CriarArquivosService {
 	protected static final String _3 = "3";
 	protected static final String _4 = "4";
 	protected static final String FILLER = "";
-	protected static final String PATTERN_DATE = "yyyy-MM-dd-HHmmss";
-	protected static final String HEADER = "0000010%19999YYYYMM%20";
+	protected static final String HEADER = "%30%19999YYYYMM%20";
 	protected static final String TRAILLER = "%14%20";
 
 	/**
@@ -101,21 +94,12 @@ public abstract class CriarArquivosService {
 	}
 	
 	/**
-	 * Obtem data e hora em um pattern determinado
-	 * @return
-	 */
-	protected String getDateStr() {
-		return new SimpleDateFormat(PATTERN_DATE).format(new Date(System.currentTimeMillis()));
-	}
-	
-
-	/**
 	 * 
 	 * @param outputFile
 	 * @param i 
 	 */
 	protected String traillerOfFile(String length, int i) {
-		return TRAILLER.replaceAll("%1", length).
+		return TRAILLER.replaceAll(Constants.R1, length).
 				replaceAll("%2", String.format("%1$"+i+"s", ""));
 	}
 
@@ -128,76 +112,9 @@ public abstract class CriarArquivosService {
 	protected String headerOfFile(String dt, String s, int i) {
 		return HEADER.
 				replaceAll("YYYYMM", dt.replace("-", "")).
-				replaceAll("%1", String.format(PATTERN_9_ESPACOS_DIREITA, s)).
-				replaceAll("%2", String.format("%1$"+i+"s", ""));
-	}
-	
-	/**
-	 * Metodo sobrecarrega merge files e realiza o merge dos arquivos
-	 * @param strings
-	 * @param fileOutput
-	 */
-	protected void mergeFiles(String[] pathFiles, String fileOutput) {
-		
-		if(pathFiles==null || pathFiles.length == 0 || fileOutput == null || fileOutput.isEmpty()){
-			System.out.println("Dados inválidos para merge");
-			return;
-		}
-		
-		int i = 0;
-		File[] files = new File[pathFiles.length];
-		
-		for (String s : pathFiles) {
-			files[i++] = new File(Constants.OUT+s);
-		}
-		
-		File fileOutPut = new File(Constants.OUT+fileOutput);
-		
-		mergeFiles(files, fileOutPut);
-	}
-	
-	/**
-	 * Merge de arquivos
-	 * @param files
-	 * @param mergedFile
-	 */
-	protected void mergeFiles(File[] files, File mergedFile) {
-		 
-		FileWriter fstream = null;
-		BufferedWriter out = null;
-		try {
-			fstream = new FileWriter(mergedFile, true);
-			 out = new BufferedWriter(fstream);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
- 
-		for (File f : files) {
-			System.out.println("merging: " + f.getName());
-			FileInputStream fis;
-			try {
-				fis = new FileInputStream(f);
-				BufferedReader in = new BufferedReader(new InputStreamReader(fis));
- 
-				String aLine;
-				while ((aLine = in.readLine()) != null) {
-					out.write(aLine);
-					out.newLine();
-				}
- 
-				in.close();
-				f.delete();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
- 
-		try {
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
- 
+				replaceAll(Constants.R1, String.format(PATTERN_9_ESPACOS_DIREITA, s)).
+				replaceAll("%2", String.format("%1$"+i+"s", "")).
+				replaceAll("%3", String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i));
 	}
 	
 	/**

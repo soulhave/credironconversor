@@ -17,7 +17,6 @@ import br.com.decla.credicon.to.ClienteTO;
 public class CriarArquivosClienteService extends CriarArquivosService {
 
 	private static final String CLIENTE_HEADER_FILE = "CLIENTE";
-	private static final String CLIENTE_OUTPUT = "Cliente-%1.txt";
 	private static CriarArquivosClienteService S_INSTANCE;
 	
 	/**
@@ -40,8 +39,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 	 * @param arquivoCliente 
 	 */
 	public void criarArquivoCliente(Doc3040 doc3040, Map<String, String> arquivoCliente) {
-		Integer i = 1;
-		String outputFile = CLIENTE_OUTPUT.replace("%1", getDateStr());
+		String outputFile = Constants.CLIENTE_OUTPUT;
 
 		//Criar arquivo Reader
 		String header = headerOfFile(doc3040.getDtBase(),CLIENTE_HEADER_FILE,29);
@@ -53,7 +51,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 		for (Cli cli : clientes) {
 			ClienteTO cliente = new ClienteTO();
 			
-			cliente.setSequencial((++i).toString());
+			cliente.setSequencial((++Constants.i).toString());
 			cliente.setiDRegistro(_1);
 			cliente.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 			cliente.setPorteCliente(cli.getPorteCli().toString());
@@ -69,7 +67,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 		}
 		
 		//Criar arquivo trailler
-		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++i),48);
+		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),48);
 		
 		//Gerar arquivo
 		criarArquivoTxt(outputFile, lista, ClienteTO.class, header, trailler);

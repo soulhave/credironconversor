@@ -10,9 +10,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import br.com.decla.credicon.generated.Doc3040;
+import br.com.decla.credicon.service.Constants;
 import br.com.decla.credicon.service.CriarArquivosClienteService;
 import br.com.decla.credicon.service.CriarArquivosOperacaoService;
 import br.com.decla.credicon.service.LerArquivoCpfCnpjCliente;
+import br.com.decla.credicon.util.Utiliarios;
 
 public class Principal {
 
@@ -38,6 +40,13 @@ public class Principal {
 			//Criação do arquivo de operacoes.
 			CriarArquivosOperacaoService operacao = CriarArquivosOperacaoService.getInstance();
 			operacao.criarArquivoOperacao(doc3040,arquivoCliente);
+			
+			Utiliarios.mergeFiles(new String[]{
+					Constants.CLIENTE_OUTPUT,
+					Constants.OPERACAO_OUTPUT},
+					Constants.ARQUIVOBANCOOB_TXT.replaceAll(Constants.R1, Utiliarios.getDateStr()));
+			
+			Constants.i = 0;
 			
 		} catch (JAXBException e) {
 			e.printStackTrace();
