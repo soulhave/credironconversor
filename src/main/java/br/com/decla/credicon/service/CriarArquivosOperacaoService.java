@@ -74,8 +74,9 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 				operacao.setRegiaoBAcen(REGIAO_BACEN);
 				operacao.setcEP(op.getCEP().toString());
 				operacao.setiDOrigemRecursoOpCred(op.getOrigemRec().toString());
-				operacao.setiDModOperacao(op.getMod().toString());
-				operacao.setiDSubModOperacao(FILLER); //Vazio pois não encontrei.
+				String modulo = op.getMod().toString();
+				operacao.setiDModOperacao(modulo.substring(0, 2));
+				operacao.setiDSubModOperacao(modulo.substring(2, 4));
 				operacao.setiDNivelRisco(op.getClassOp());
 				operacao.setPercTaxaJuros(FILLER); //Vazio pois não encontrei.
 				operacao.setDataContratacao(op.getDtContr().toGregorianCalendar().getTime());

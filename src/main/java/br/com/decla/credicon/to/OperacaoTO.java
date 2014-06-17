@@ -61,10 +61,10 @@ public class OperacaoTO {
 	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')
 	private String percTaxaJuros; //Tipo N - Tamanho 7 - Decimais 4 # Posição 92-98 #Taxa efetiva equivalente aos juros pré-fixados incidentes no curso normal da operação, calculada considerando-se dias corridos
     @FieldFixedLength(8)
-    @FieldConverter(converter = ConverterKind.Date, format = "yyyy-MM-dd")
+    @FieldConverter(converter = ConverterKind.Date, format = "yyyyMMdd")
 	private Date dataContratacao; //Tipo D - Tamanho 8 - Decimais  # Posição 99-106 #Data de contratação da operação.
     @FieldFixedLength(8)
-    @FieldConverter(converter = ConverterKind.Date, format = "yyyy-MM-dd")
+    @FieldConverter(converter = ConverterKind.Date, format = "yyyyMMdd")
     private Date dataVencimento; //Tipo D - Tamanho 8 - Decimais  # Posição 107-114 #Data de pagamento da última parcela ou de expiração do contrato. Quando não informado indica data de vencimento indeterminada (Formato AAAA-MM-DD) no intervalo > 31/12/1900 e < 01/01/2050
 	@FieldFixedLength(15)
 	@FieldAlign(alignMode=AlignMode.Right, alignChar='0')

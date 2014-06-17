@@ -86,7 +86,7 @@
 										</xs:element>
 									</xs:choice>
 									<xs:attribute type="xs:string" name="Contrt" use="optional" />
-									<xs:attribute type="xs:short" name="Mod" use="optional" />
+									<xs:attribute type="xs:string" name="Mod" use="optional" />
 									<xs:attribute type="xs:string" name="Cosif" use="optional" />
 									<xs:attribute type="xs:short" name="OrigemRec"
 										use="optional" />
