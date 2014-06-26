@@ -56,6 +56,36 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 		//Criar arquivo Reader
 		String header = headerOfFile(doc3040.getDtBase(),OPERACAO_HEADER_FILE,633);
 		
+		List<OperacaoTO> lista = criarOperacoes(doc3040, arquivoCliente);
+		
+		//Gerar arquivo
+		criarArquivoTxt(OPERACAO_OUTPUT_OPERACAO_TMP, lista, OperacaoTO.class, header, null);
+
+		//Gera  o arquivo de garantia
+		Constants.i = criarArquivoGarantia(doc3040, Constants.i, arquivoCliente);
+
+		//Gera  o arquivo de garantia
+		Constants.i = criarArquivoInfAdicional(doc3040, Constants.i, arquivoCliente);
+		
+		Utiliarios.mergeFiles(new String[]{
+				OPERACAO_OUTPUT_OPERACAO_TMP,
+				OPERACAO_OUTPUT_GARANTIA_TMP,
+				OPERACAO_OUTPUT_INF_AD_TMP}, 
+				fileOutput);
+		
+		//Criar arquivo trailler
+		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),652);
+		
+		writeFooter(fileOutput, trailler);
+	}
+
+	/**
+	 * Cria as operações
+	 * @param doc3040
+	 * @param arquivoCliente
+	 * @return
+	 */
+	private List<OperacaoTO> criarOperacoes(Doc3040 doc3040, Map<String, String> arquivoCliente) {
 		/*Lista de Operacoes*/
 		List<OperacaoTO> lista = new ArrayList<OperacaoTO>();
 		List<Cli> clientes = doc3040.getCli();
@@ -133,26 +163,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 			}
 			
 		}
-		
-		//Gerar arquivo
-		criarArquivoTxt(OPERACAO_OUTPUT_OPERACAO_TMP, lista, OperacaoTO.class, header, null);
-
-		//Gera  o arquivo de garantia
-		Constants.i = criarArquivoGarantia(doc3040, Constants.i, arquivoCliente);
-
-		//Gera  o arquivo de garantia
-		Constants.i = criarArquivoInfAdicional(doc3040, Constants.i, arquivoCliente);
-		
-		Utiliarios.mergeFiles(new String[]{
-				OPERACAO_OUTPUT_OPERACAO_TMP,
-				OPERACAO_OUTPUT_GARANTIA_TMP,
-				OPERACAO_OUTPUT_INF_AD_TMP}, 
-				fileOutput);
-		
-		//Criar arquivo trailler
-		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),652);
-		
-		writeFooter(fileOutput, trailler);
+		return lista;
 	}
 	
 	/**

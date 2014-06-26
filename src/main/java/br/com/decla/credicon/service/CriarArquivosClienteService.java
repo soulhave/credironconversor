@@ -44,6 +44,24 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 		//Criar arquivo Reader
 		String header = headerOfFile(doc3040.getDtBase(),CLIENTE_HEADER_FILE,29);
 		
+		//Preencher Clientes
+		List<ClienteTO> lista = preencherCliente(doc3040, arquivoCliente);
+		
+		//Criar arquivo trailler
+		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),48);
+		
+		//Gerar arquivo
+		criarArquivoTxt(outputFile, lista, ClienteTO.class, header, trailler);
+	}
+
+	/**
+	 * Dados dos clientes
+	 * 
+	 * @param doc3040
+	 * @param arquivoCliente
+	 * @return
+	 */
+	private List<ClienteTO> preencherCliente(Doc3040 doc3040, Map<String, String> arquivoCliente) {
 		/*Lista de Clientes*/
 		List<ClienteTO> lista = new ArrayList<ClienteTO>();
 		List<Cli> clientes = doc3040.getCli();
@@ -65,12 +83,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 			
 			lista.add(cliente);
 		}
-		
-		//Criar arquivo trailler
-		String trailler = traillerOfFile(String.format(PATTERN_6_ZEROS_ESQUERDA, ++Constants.i),48);
-		
-		//Gerar arquivo
-		criarArquivoTxt(outputFile, lista, ClienteTO.class, header, trailler);
+		return lista;
 	}
 	
 }

@@ -88,4 +88,6 @@ public class Utiliarios {
 	public static String getDateStr() {
 		return new SimpleDateFormat(Constants.PATTERN_DATE).format(new Date(System.currentTimeMillis()));
 	}
+	
+
 }
