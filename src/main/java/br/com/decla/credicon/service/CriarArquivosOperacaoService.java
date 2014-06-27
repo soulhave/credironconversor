@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.generated.Doc3040.Cli;
@@ -24,6 +26,7 @@ import br.com.decla.credicon.util.Utiliarios;
  */
 public class CriarArquivosOperacaoService extends CriarArquivosService {
 	
+	private static Set<String> TIPOCONTRATO = new TreeSet<String>();
 	protected static final String REGIAO_BACEN = "10093";
 	private static final String OPERACAO_HEADER_FILE = "OPERACOES";
 	private static final String OPERACAO_OUTPUT_GARANTIA_TMP = "Garantia_tmp.txt";
@@ -95,6 +98,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 				OperacaoTO operacao = new OperacaoTO();
 				operacao.setSequencial((++Constants.i).toString());
 				operacao.setiDRegistro(_1);
+				operacao.setiDProduto(getCodigoProduto(op.getContrt()));
 				operacao.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 				operacao.setOrigemImportacao(_4);
 				operacao.setNumeroContrato(op.getContrt());
@@ -163,7 +167,28 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 			}
 			
 		}
+
+		for (String s : TIPOCONTRATO) {
+			System.out.println(s);
+		}
+		
 		return lista;
+	}
+	
+	/**
+	 * Metodo consulta pelo contrato e e retorna o código
+	 * do produto.
+	 * @param contrato
+	 * @return
+	 */
+	private String getCodigoProduto(String contrato) {
+		/**
+		CHESPF/PJ - Conta Corrente
+		EMPRCGCF/J - Empréstimo
+		DESCCHL - Titulos (Desconto)	
+		 */
+		TIPOCONTRATO.add(contrato.substring(10, 18));
+		return "11";
 	}
 	
 	/**
