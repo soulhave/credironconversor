@@ -77,7 +77,7 @@ public class CriarArquivosClienteService extends CriarArquivosService {
 			cliente.setTipoControle((cli.getTpCtrl()!=null?cli.getTpCtrl().toString():"01"));
 			cliente.setTipoPessoa((cli.getTp()!=null?cli.getTp().toString():"1"));
 			cliente.setDataIncioRelacionamento(cli.getIniRelactCli().toGregorianCalendar().getTime());
-			cliente.setNivelRiscoCliente(cli.getClassCli());
+			cliente.setNivelRiscoCliente(cli.getClassCli().replaceAll(_AA, _A));
 			cliente.setAutorizacao(cli.getAutorzc());
 			cliente.setFaturamentoAnual(doubleToStrWithoutDot(cli.getFatAnual()));
 			

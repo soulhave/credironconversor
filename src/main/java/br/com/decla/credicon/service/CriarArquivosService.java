@@ -17,6 +17,8 @@ import org.coury.jfilehelpers.engines.FileHelperEngine;
  */
 public abstract class CriarArquivosService {
 	
+	protected static final String _A = "A";
+	protected static final String _AA = "AA";
 	protected static final String PATTERN_9_ESPACOS_DIREITA = "%1$-9s";
 	protected static final String PATTERN_2_ZEROS_ESQUERDA = "%02d";
 	protected static final String PATTERN_4_ZEROS_ESQUERDA = "%04d";

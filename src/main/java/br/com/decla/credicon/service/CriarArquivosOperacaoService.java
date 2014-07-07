@@ -1,11 +1,11 @@
 package br.com.decla.credicon.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import br.com.decla.credicon.generated.Doc3040;
 import br.com.decla.credicon.generated.Doc3040.Cli;
@@ -26,7 +26,9 @@ import br.com.decla.credicon.util.Utiliarios;
  */
 public class CriarArquivosOperacaoService extends CriarArquivosService {
 	
-	private static Set<String> TIPOCONTRATO = new TreeSet<String>();
+	private static final String TIPO = "Float";
+	private static final String METHODV = "getV";
+	private static final String CORINGA = "@@";
 	protected static final String REGIAO_BACEN = "10093";
 	private static final String OPERACAO_HEADER_FILE = "OPERACOES";
 	private static final String OPERACAO_OUTPUT_GARANTIA_TMP = "Garantia_tmp.txt";
@@ -92,13 +94,17 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 		/*Lista de Operacoes*/
 		List<OperacaoTO> lista = new ArrayList<OperacaoTO>();
 		List<Cli> clientes = doc3040.getCli();
+		String somaValores = "";
 		
 		for (Cli cli : clientes) {
 			for (Op op : cli.getOp()) {
+				String modulo = op.getMod().toString();
+				String modalidade = modulo.substring(0, 2);
+				
 				OperacaoTO operacao = new OperacaoTO();
 				operacao.setSequencial((++Constants.i).toString());
 				operacao.setiDRegistro(_1);
-				operacao.setiDProduto(getCodigoProduto(op.getContrt()));
+				operacao.setiDProduto(getCodigoProdutoByModalidade(modalidade));
 				operacao.setCpfCnpjCliente(obterClienteByKey(cli.getCd().toString(),arquivoCliente));
 				operacao.setOrigemImportacao(_4);
 				operacao.setNumeroContrato(op.getContrt());
@@ -108,16 +114,12 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 				operacao.setRegiaoBAcen(REGIAO_BACEN);
 				operacao.setcEP(op.getCEP().toString());
 				operacao.setiDOrigemRecursoOpCred(op.getOrigemRec().toString());
-				String modulo = op.getMod().toString();
-				operacao.setiDModOperacao(modulo.substring(0, 2));
+				operacao.setiDModOperacao(modalidade);
 				operacao.setiDSubModOperacao(modulo.substring(2, 4));
-				operacao.setiDNivelRisco(op.getClassOp());
+				operacao.setiDNivelRisco(op.getClassOp().replaceAll(_AA, _A));
 				operacao.setPercTaxaJuros(FILLER); //Vazio pois não encontrei.
 				operacao.setDataContratacao(op.getDtContr().toGregorianCalendar().getTime());
 				operacao.setDataVencimento(op.getDtVencOp().toGregorianCalendar().getTime());
-				operacao.setSaldoDevedor("0"); //Somar os valores dos vencimentos.
-				operacao.setNaturezaOperacao(op.getNatuOp().toString());
-				operacao.setProvisaoRisco(doubleToStrWithoutDot(op.getProvConsttd()));
 				
 				List<Object> vencOrGarOrInf = op.getVencOrGarOrInf();
 				
@@ -128,6 +130,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 						operacao.setVencerAte31a60(doubleToStrWithoutDot(v.getV120()));
 						operacao.setVencerAte61a90(doubleToStrWithoutDot(v.getV130()));
 						operacao.setVencerAte91a180(doubleToStrWithoutDot(v.getV140()));
+						operacao.setVencerAte181a360(doubleToStrWithoutDot(v.getV150()));
 						operacao.setVencerAte361a720(doubleToStrWithoutDot(v.getV160()));
 						operacao.setVencerAte721a1080(doubleToStrWithoutDot(v.getV165()));						
 						operacao.setVencerAte1081a1440(doubleToStrWithoutDot(v.getV170()));
@@ -150,9 +153,13 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 						operacao.setValbaixadosprejate12(_0);
 						operacao.setValbaixadosprejde12a48(doubleToStrWithoutDot(v.getV320()));
 						operacao.setValbaixadosprejMaior48(doubleToStrWithoutDot(v.getV330()));
+						somaValores = somaValoresVenc(v);
 					}
 				}
 				
+				operacao.setSaldoDevedor(somaValores); //Somar os valores dos vencimentos.
+				operacao.setNaturezaOperacao(op.getNatuOp().toString());
+				operacao.setProvisaoRisco(doubleToStrWithoutDot(op.getProvConsttd()));
 				operacao.setLimiteAte360Dias(_0);
 				operacao.setLimiteAcima360Dias(_0);
 				operacao.setCreditoALiberarAte360Dias(_0);
@@ -168,27 +175,82 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 			
 		}
 
-		for (String s : TIPOCONTRATO) {
-			System.out.println(s);
+		return lista;
+	}
+
+	/**
+	 * Soma os valores dos vencimentos
+	 * @param Venc
+	 * @author ramon
+	 * @return
+	 */
+	private String somaValoresVenc(Venc v) {
+		Method[] metodos = Venc.class.getMethods();
+		Float soma = 0F;
+		for (Method method : metodos) {
+			String nameMethod = method.getName();
+			String tipoRetorno = method.getReturnType().getName();
+			if(nameMethod.contains(METHODV) && tipoRetorno.contains(TIPO)){
+				try {
+					Float invoke = (Float)method.invoke(v);
+					soma+=(invoke==null?0F:invoke);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					System.out.println(e.getMessage());
+				}
+			}
 		}
 		
-		return lista;
+		return soma.toString().replace(".", "");
 	}
 	
 	/**
-	 * Metodo consulta pelo contrato e e retorna o código
+	 * Metodo consulta pela modalidade e e retorna o código
 	 * do produto.
-	 * @param contrato
+	 * @param modalidade
 	 * @return
 	 */
-	private String getCodigoProduto(String contrato) {
-		/**
-		CHESPF/PJ - Conta Corrente
-		EMPRCGCF/J - Empréstimo
-		DESCCHL - Titulos (Desconto)	
+	private String getCodigoProdutoByModalidade(String modalidade) {
+		//vars
+		String _01 = "01";
+		String _02 = "02";
+		String _03 = "03";
+		String _04 = "04";
+		String _07 = "07";
+		String _08 = "08";
+		String _19 = "19";
+		
+		/*
+		 * 01.xx ( no 3040)  = Adiantamento a Depositante
+		 * Dai vc coloca o produto 03 - Conta Corrente
+		 * 
+		 * 19.xx ( no 3040)  = Limite
+		 * Dai vc coloca o produto 03 - Conta Corrente
+		 * 
 		 */
-		TIPOCONTRATO.add(contrato.substring(10, 18));
-		return "11";
+		if(_01.equals(modalidade) || _19.equals(modalidade)){
+			return _03;
+		}
+		
+		/*
+		 * 02.xx ( no 3040)  = Empréstimo 
+		 * Dai vc coloca o produto 07 - Emprestimos e Financiamentos
+		 * 
+		 * 04.xx ( no 3040)  = Financiamento
+		 * Dai vc coloca o produto 07 - Emprestimos e Financiamentos            
+		 */
+		if(_02.equals(modalidade) || _04.equals(modalidade)){
+			return _07;
+		}
+		
+		/*
+		 * 03.xx ( no 3040)  = Desconto
+		 * Dai vc coloca o produto 08 - Titulos Desconto e Recebiveis   
+		 */
+		if(_03.equals(modalidade)){
+			return _08;
+		}
+		
+		return CORINGA;
 	}
 	
 	/**
@@ -213,7 +275,7 @@ public class CriarArquivosOperacaoService extends CriarArquivosService {
 						garantia.setiDRegistro(_2);
 						garantia.setiDTipoGarantia(String.format(PATTERN_4_ZEROS_ESQUERDA,g.getTp()).substring(0, 2));
 						garantia.setiDSubTipoGarantia(String.format(PATTERN_4_ZEROS_ESQUERDA,g.getTp()).substring(2, 4));
-						garantia.setCpfCnpjCliente(g.getIdent().toString());
+						garantia.setcPFCnpjGarantidor(obterClienteByKey(g.getIdent(),arquivoCliente));
 						garantia.setDescNomeGarantidor(FILLER); //Não tinha nome no xml
 						garantia.setPercGarantia(doubleToStrWithoutDot(g.getPercGar()));
 						garantia.setValorOriGarantia(_0);
